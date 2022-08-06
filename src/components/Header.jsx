@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { getUser } from '../services/userAPI';
 import Loading from './Loading';
+import Navigation from './Navigation';
 
 class Header extends Component {
   constructor() {
@@ -32,6 +33,8 @@ class Header extends Component {
             { userName }
           </p>
         )}
+        {/* Ideia de criar um componente dedicado ao nav dada pelo colega Rafael Aguiar */}
+        <Navigation />
       </header>
     );
   }
