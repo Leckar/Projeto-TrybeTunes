@@ -13,7 +13,7 @@ class Search extends Component {
       isButtonDisabled: true,
       artistAlbums: [],
       listReady: false,
-      elementList: [],
+      lastQuery: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -34,31 +34,29 @@ class Search extends Component {
 
   async handleSubmit() {
     const { artist } = this.state;
-    this.setState({ loading: true, listReady: false });
+    this.setState({ loading: true, listReady: false, lastQuery: artist });
     const artistData = await searchAlbumsAPI(artist);
     this.setState({
       loading: false,
       artist: '',
-      artistAlbums: artistData,
+      artistAlbums: [...artistData],
       listReady: true,
     });
   }
 
   renderAlbumList() {
-    const { artistAlbums } = this.state;
+    const { artistAlbums, lastQuery } = this.state;
     if (artistAlbums.length > 0) {
       const arr = artistAlbums.map((e) => (
         <Link
           to={ `/album/${e.collectionId}` }
-          key={ collectionId }
+          key={ e.collectionId }
           data-testid={ `link-to-album-${e.collectionId}` }
         >
-          <figure>
-            <img
-              src={ `${e.artworkUrl100}` }
-              alt={ `capa do álbum ${e.collectionName}` }
-            />
-          </figure>
+          <img
+            src={ `${e.artworkUrl100}` }
+            alt={ `capa do álbum ${e.collectionName}` }
+          />
           <h4>
             { `${e.collectionName}` }
           </h4>
@@ -69,23 +67,27 @@ class Search extends Component {
           </p>
         </Link>
       ));
-      this.setState({
-        elementList: [...arr],
-      });
-      return;
+      return (
+        <div>
+          <h3>
+            Resultado de álbuns de:
+            {' '}
+            { lastQuery }
+          </h3>
+          { arr }
+        </div>
+      );
     }
-    const arr = [(
+    const arr = [
       <h4 key="notFound">
         Nenhum álbum foi encontrado
-      </h4>),
+      </h4>,
     ];
-    this.setState({
-      elementList: [...arr],
-    });
+    return arr;
   }
 
   render() {
-    const { artist, isButtonDisabled, loading, listReady, elementList } = this.state;
+    const { artist, isButtonDisabled, loading, listReady } = this.state;
     const form = (
       <form>
         <input
@@ -109,7 +111,7 @@ class Search extends Component {
         <Header />
         <main>
           { loading ? <Loading /> : form }
-          { listReady ? elementList : null }
+          { listReady ? this.renderAlbumList() : null }
         </main>
       </div>
     );
