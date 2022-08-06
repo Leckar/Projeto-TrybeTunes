@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { createUser } from '../services/userAPI';
 import Loading from '../components/Loading';
 
@@ -31,8 +31,9 @@ class Login extends Component {
   async handleSubmit() {
     const { user } = this.state;
     this.setState({ loading: true });
-    await createUser(user);
-    this.setState({ loading: false });
+    await createUser({ user });
+    const { history } = this.props;
+    history.push('/search');
   }
 
   conditionalRender() {
@@ -66,5 +67,11 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 export default Login;
