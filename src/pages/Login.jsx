@@ -36,7 +36,7 @@ class Login extends Component {
     history.push('/search');
   }
 
-  conditionalRender() {
+  render() {
     const { user, isButtonDisabled, loading } = this.state;
     const form = (
       <div data-testid="page-login">
@@ -59,12 +59,6 @@ class Login extends Component {
       </div>
     );
     return loading ? <Loading /> : form;
-  }
-
-  render() {
-    return (
-      this.conditionalRender()
-    );
   }
 }
 
