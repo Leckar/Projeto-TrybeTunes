@@ -31,7 +31,7 @@ class Login extends Component {
   async handleSubmit() {
     const { user } = this.state;
     this.setState({ loading: true });
-    await createUser({ user });
+    await createUser({ name: user });
     const { history } = this.props;
     history.push('/search');
   }
