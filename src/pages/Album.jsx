@@ -42,7 +42,7 @@ class Album extends Component {
     const { name, checked } = target;
     console.log(name, checked);
     this.setState({ loading: true });
-    if (checked) {
+    if (checked === true) {
       await addSong({ trackId: name });
       const fav = await getFavoriteSongs();
       this.setState(({
