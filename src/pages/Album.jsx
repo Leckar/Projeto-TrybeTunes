@@ -25,7 +25,7 @@ class Album extends Component {
     const { params } = match;
     const { id } = params;
     const data = await getMusics(id);
-    const snapData = data.shift();
+    const snapData = data[0];
     this.setState({
       loading: false,
       snapshot: { ...snapData },
