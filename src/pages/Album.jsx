@@ -4,7 +4,7 @@ import getMusics from '../services/musicsAPI';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, removeSong, getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -13,13 +13,15 @@ class Album extends Component {
       loading: true,
       snapshot: {},
       albumData: [],
-      currentAlbumFav: [],
+      favoriteTracks: [],
     };
     this.getAlbumData = this.getAlbumData.bind(this);
     this.favoriteHandler = this.favoriteHandler.bind(this);
   }
 
   async componentDidMount() {
+    const fav = await getFavoriteSongs();
+    this.setState(({ favoriteTracks: [...fav] }));
     await this.getAlbumData();
   }
 
@@ -37,21 +39,27 @@ class Album extends Component {
   }
 
   async favoriteHandler({ target }) {
-    const { albumData } = this.state;
     const { name, checked } = target;
     console.log(name, checked);
     this.setState({ loading: true });
     if (checked) {
-      await addSong(albumData.find((e) => e.trackId === name));
-      this.setState((prev) => ({
-        currentAlbumFav: [...prev.currentAlbumFav, parseInt(name, 10)],
+      await addSong({ trackId: name });
+      const fav = await getFavoriteSongs();
+      this.setState(({
+        favoriteTracks: [...fav],
+      }));
+    } else {
+      await removeSong({ trackId: name });
+      const fav = await getFavoriteSongs();
+      this.setState(({
+        favoriteTracks: [...fav],
       }));
     }
     this.setState({ loading: false });
   }
 
   render() {
-    const { loading, albumData, snapshot, currentAlbumFav } = this.state;
+    const { loading, albumData, snapshot, favoriteTracks } = this.state;
     const { artistName, collectionName,
       artworkUrl100 } = snapshot;
     return (
@@ -76,7 +84,7 @@ class Album extends Component {
                 key={ track.trackId }
                 handleChange={ this.favoriteHandler }
                 data={ track }
-                favorites={ currentAlbumFav }
+                favorites={ favoriteTracks }
               />)) }
           </div>) }
       </div>

@@ -4,7 +4,8 @@ import React, { Component } from 'react';
 class MusicCard extends Component {
   render() {
     const { data, handleChange, favorites } = this.props;
-    const checked = favorites.some((id) => data.trackId === id);
+    const checked = favorites
+      .some(({ trackId }) => data.trackId === parseInt(trackId, 10));
     return (
       <section>
         <div key={ data.trackName }>
@@ -48,7 +49,7 @@ MusicCard.propTypes = {
     trackNumber: PropTypes.number,
     trackName: PropTypes.string,
   }),
-  favorites: PropTypes.arrayOf(PropTypes.number),
+  favorites: PropTypes.arrayOf(PropTypes.shape({ trackId: PropTypes.string })),
   handleChange: PropTypes.func.isRequired,
 };
 
