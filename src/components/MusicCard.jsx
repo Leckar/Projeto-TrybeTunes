@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 
 class MusicCard extends Component {
   render() {
-    const { data } = this.props;
+    const { data, handleChange } = this.props;
     return (
       <section>
         <div key={ data.trackName }>
@@ -11,9 +11,6 @@ class MusicCard extends Component {
             <h4>
               { data.trackName }
             </h4>
-            <p>
-              { data.artistName }
-            </p>
           </div>
           <div>
             <audio
@@ -27,7 +24,12 @@ class MusicCard extends Component {
               <code>audio</code>
               .
             </audio>
-            <input type="checkbox" name={ data.trackId } />
+            <input
+              type="checkbox"
+              name={ data.trackId }
+              data-testid={ `checkbox-music-${data.trackId}` }
+              onChange={ (event) => handleChange(event) }
+            />
           </div>
         </div>
       </section>
@@ -37,13 +39,14 @@ class MusicCard extends Component {
 
 MusicCard.propTypes = {
   data: PropTypes.shape({
-    artistName: PropTypes.string,
     collectionName: PropTypes.string,
     artworkUrl100: PropTypes.string,
     previewUrl: PropTypes.string,
+    trackId: PropTypes.number,
     trackNumber: PropTypes.number,
     trackName: PropTypes.string,
   }),
+  handleChange: PropTypes.func.isRequired,
 };
 
 MusicCard.defaultProps = {

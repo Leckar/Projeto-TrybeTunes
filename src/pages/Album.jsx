@@ -4,6 +4,7 @@ import getMusics from '../services/musicsAPI';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
+import { addSong } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -14,6 +15,7 @@ class Album extends Component {
       albumData: [],
     };
     this.getAlbumData = this.getAlbumData.bind(this);
+    this.favoriteHandler = this.favoriteHandler.bind(this);
   }
 
   async componentDidMount() {
@@ -31,6 +33,15 @@ class Album extends Component {
       snapshot: { ...snapData },
       albumData: [...data.filter((e) => e.trackId)],
     });
+  }
+
+  favoriteHandler({ target }) {
+    const { albumData } = this.state;
+    this.setState({ loading: true });
+    if (target.checked) {
+      addSong(albumData.find((e) => e.trackId === target.id));
+    }
+    this.setState({ loading: false });
   }
 
   render() {
@@ -57,6 +68,7 @@ class Album extends Component {
             { albumData.map((track) => (
               <MusicCard
                 key={ track.trackId }
+                handleChange={ this.favoriteHandler }
                 data={ track }
               />)) }
           </div>) }
