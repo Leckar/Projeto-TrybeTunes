@@ -13,6 +13,7 @@ class Album extends Component {
       loading: true,
       snapshot: {},
       albumData: [],
+      currentAlbumFav: [],
     };
     this.getAlbumData = this.getAlbumData.bind(this);
     this.favoriteHandler = this.favoriteHandler.bind(this);
@@ -35,17 +36,22 @@ class Album extends Component {
     });
   }
 
-  favoriteHandler({ target }) {
+  async favoriteHandler({ target }) {
     const { albumData } = this.state;
+    const { name, checked } = target;
+    console.log(name, checked);
     this.setState({ loading: true });
-    if (target.checked) {
-      addSong(albumData.find((e) => e.trackId === target.id));
+    if (checked) {
+      await addSong(albumData.find((e) => e.trackId === name));
+      this.setState((prev) => ({
+        currentAlbumFav: [...prev.currentAlbumFav, parseInt(name, 10)],
+      }));
     }
     this.setState({ loading: false });
   }
 
   render() {
-    const { loading, albumData, snapshot } = this.state;
+    const { loading, albumData, snapshot, currentAlbumFav } = this.state;
     const { artistName, collectionName,
       artworkUrl100 } = snapshot;
     return (
@@ -70,6 +76,7 @@ class Album extends Component {
                 key={ track.trackId }
                 handleChange={ this.favoriteHandler }
                 data={ track }
+                favorites={ currentAlbumFav }
               />)) }
           </div>) }
       </div>

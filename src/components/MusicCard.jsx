@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 
 class MusicCard extends Component {
   render() {
-    const { data, handleChange } = this.props;
+    const { data, handleChange, favorites } = this.props;
+    const checked = favorites.some((id) => data.trackId === id);
     return (
       <section>
         <div key={ data.trackName }>
@@ -27,6 +28,7 @@ class MusicCard extends Component {
             <input
               type="checkbox"
               name={ data.trackId }
+              checked={ checked }
               data-testid={ `checkbox-music-${data.trackId}` }
               onChange={ (event) => handleChange(event) }
             />
@@ -46,11 +48,13 @@ MusicCard.propTypes = {
     trackNumber: PropTypes.number,
     trackName: PropTypes.string,
   }),
+  favorites: PropTypes.arrayOf(PropTypes.number),
   handleChange: PropTypes.func.isRequired,
 };
 
 MusicCard.defaultProps = {
   data: {},
+  favorites: [],
 };
 
 export default MusicCard;
