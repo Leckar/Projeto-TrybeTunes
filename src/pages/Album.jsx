@@ -40,16 +40,17 @@ class Album extends Component {
 
   async favoriteHandler({ target }) {
     const { name, checked } = target;
-    console.log(name, checked);
+    const parse = parseInt(name, 10);
+    console.log(typeof parse);
     this.setState({ loading: true });
     if (checked === true) {
-      await addSong({ trackId: name });
+      await addSong({ trackId: parse });
       const fav = await getFavoriteSongs();
       this.setState(({
         favoriteTracks: [...fav],
       }));
     } else {
-      await removeSong({ trackId: name });
+      await removeSong({ trackId: parse });
       const fav = await getFavoriteSongs();
       this.setState(({
         favoriteTracks: [...fav],
@@ -62,6 +63,7 @@ class Album extends Component {
     const { loading, albumData, snapshot, favoriteTracks } = this.state;
     const { artistName, collectionName,
       artworkUrl100 } = snapshot;
+
     return (
       <div data-testid="page-album">
         <Header />

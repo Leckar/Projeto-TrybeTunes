@@ -5,7 +5,7 @@ class MusicCard extends Component {
   render() {
     const { data, handleChange, favorites } = this.props;
     const checked = favorites
-      .some(({ trackId }) => data.trackId === parseInt(trackId, 10));
+      .some(({ trackId }) => data.trackId === Number(trackId));
     return (
       <section>
         <div key={ data.trackName }>
@@ -29,7 +29,7 @@ class MusicCard extends Component {
             <input
               type="checkbox"
               name={ data.trackId }
-              checked={ checked }
+              checked={ checked === true ? checked : false }
               data-testid={ `checkbox-music-${data.trackId}` }
               onChange={ (event) => handleChange(event) }
             />
